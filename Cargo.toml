@@ -3,6 +3,7 @@ name = "fuselage"
 version = "0.1.0"
 authors = ["foophoof <me@foophoof.com>"]
 build = "build.rs"
+license = "MIT"
 
 [dependencies]
 
