@@ -1,41 +1,40 @@
 ENTRY(start)
 
-MAGIC_NUMBER = 0xe85250d6;
+KERNEL_BASE = 0xFFFFC00000000000;
 
 SECTIONS {
 	. = 1M;
 
-	.boot :
-	{
+	.boot : {
 		header_start = .;
 
-		/* Magic number */
-		LONG(MAGIC_NUMBER)
-		/* Architecture 0: Protected mode i386 */
+		LONG(0xe85250d6)
 		LONG(0)
-		/* Header length */
 		LONG(header_end - header_start)
-		/* Checksum */
-		LONG(0x100000000 - (MAGIC_NUMBER + (header_end - header_start)))
-		/* Required end tag */
-		/* Type */
+		LONG(0x100000000 - (0xe85250d6 + 0 + (header_end - header_start)))
+
 		SHORT(0)
-		/* Flags */
 		SHORT(0)
-		/* Size */
 		LONG(8)
 
 		header_end = .;
 	}
 
-	.text :
-	{
-		KEEP(*(.text.start))
-		*(.text.*)
+	.bootstrap : {
+		*(.bootstrap .bootstrap.*)
 	}
 
-	/DISCARD/ :
-	{
-		*(.note.gnu.*)
+	. += KERNEL_BASE;
+
+	.text : AT(ADDR(.text) - KERNEL_BASE) {
+		*(.text .text.*)
+	}
+
+	.bss : AT(ADDR(.bss) - KERNEL_BASE) {
+		*(.bss .bss.*)
+	}
+
+	.rodata : AT(ADDR(.rodata) - KERNEL_BASE) {
+		*(.rodata .rodata.*)
 	}
 }
