@@ -1,0 +1,13 @@
+[package]
+name = "fuselage"
+version = "0.1.0"
+authors = ["foophoof <me@foophoof.com>"]
+build = "build.rs"
+
+[dependencies]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
